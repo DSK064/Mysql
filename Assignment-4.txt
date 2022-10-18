@@ -1,0 +1,31 @@
+use trainingIvy;
+show tables;
+
+create table books(
+bookId varchar(10),
+bookName varchar(20),
+authorName varchar(20),
+publishers varchar(10),
+price int,
+type varchar(10),
+qty int);
+
+create table issued(
+bookId varchar(10) references books(bookId),
+qtyIssued int);
+
+insert into issued values("T0001",4),("C0001",5),("F0001",2);
+
+insert into books  values("C0001","Fast Cook","Lata Kapoor","EPG",355,"Cookery",5),
+("F0001","The Tears","William Hopkins","First Publ",650,"Fiction",20),
+("T0001","My First C++","Brain and Brook","EPB",350,"Text",10),
+("T0002","C++ Brain Works","AW Rossaine","TDH",350,"text",15),
+("F0002","Thunderbolts","Anna Roberts","First Publ",750,"Fiction",50);
+
+select bookName,authorName,price,qtyIssued from books inner join issued on books.publishers='First Publ' and books.bookId=issued.bookId;
+
+select bookName from books where type="text" and bookId=any(select bookId from issued);
+
+select bookName,price from books order by price asc;
+
+select bookName,price+50 from books where publishers="EPB";

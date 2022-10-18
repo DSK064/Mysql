@@ -1,0 +1,42 @@
+use trainingIvy;
+show tables;
+
+create table teachers(
+no int,
+name varchar(20),
+age int,
+department varchar(20),
+doj date,
+salary int,
+sex enum('M','F'));
+
+insert into teachers values(1,"jugal",34,"computer",'1997-01-10',12000,'M'),
+(2,"sharmila",31,"history",'1998-03-24',20000,'F'),
+(3,"sandeep",32,"maths",'1996-12-12',30000,'M'),
+(4,"sangeetha",35,"history",'1999-07-01',40000,'F'),
+(5,"rakesh",42,"maths",'1997-09-05',25000,'M'),
+(6,"shyam",50,"history",'1998-06-27',30000,'M'),
+(7,"shiv om",44,"computer",'1997-02-25',21000,'M'),
+(8,"shalakha",33,"maths",'1997-07-31',20000,'F');
+
+desc teachers;
+
+select * from teachers;
+
+select * from teachers where department="history";
+
+select name from teachers where sex='F' and department="maths";
+
+select name,doj from teachers  order by doj asc;
+
+select name,salary,age from teachers where sex='M';
+
+select name,salary,age,((salary / 100)*15) as 'bonus' from teachers;
+
+select name,doj from teachers where doj like '1997%';
+
+select  * from teachers limit 3;
+
+select  * from teachers where no not in (1,2,3);
+
+insert into teachers values(9,'raja',26,'computer','1995-05-13',2300,'M');

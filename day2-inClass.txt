@@ -1,0 +1,45 @@
+use trainingIvy;
+show tables;
+
+create table teacher(
+id int,
+name varchar(20),
+dept int);
+
+create table courses(
+courseId int,
+courseName varchar(10),
+teacherId int references teacher(id));
+
+insert into teacher values(1,'A',10),(2,"B",20),(3,"C",30);
+select * from teacher;
+rollback;
+commit;
+
+insert into courses values(11,"JAVA",1),(12,"Python",2),(13,"PHP",3);
+select * from courses;
+insert into courses values(14,"C++",1);
+insert into courses values(11,"JAVA",2),(12,"Python",1),(13,"PHP",1);
+delete from courses where courseId=14;
+
+select * from teacher inner join courses on teacher.id=courses.teacherId;
+select * from courses inner join teacher on teacher.id=courses.teacherId;
+
+select * from teacher left join courses on teacher.id=courses.teacherId;
+select * from courses left join teacher on teacher.id=courses.teacherId;
+
+select * from teacher right join courses on teacher.id=courses.teacherId;
+select * from courses right join teacher on teacher.id=courses.teacherId;
+
+select * from teacher cross join courses;
+
+
+select * from courses group by teacherId having (teacherId)=2;
+select * from courses having (teacherId)=2;
+
+select courseName from courses where teacherId=(select id from teacher where name="A");
+select name from teacher where id=any(select teacherId from courses group by teacherId having count(teacherId)>1);
+
+select ucase(name) as 'name' from teacher where id=1;
+
+select datediff('2022-10-18','2001-08-30') div 365;

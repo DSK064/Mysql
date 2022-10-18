@@ -1,0 +1,43 @@
+create database trainingIvy;
+use trainingIvy;
+create table employee(
+id int,
+name varchar(10),
+dept varchar(10),
+salary int,
+address varchar(20));
+
+desc employee;
+
+insert into employee values(1,"ABC","IT",10000,"Delhi"),(2,"ABC-1","HR",15000,"Bangalore"),(3,"ABC-2","ops",5000,"Hyderabad");
+
+select * from employee;
+
+create table student(
+id int not null unique,
+name varchar(10) unique,
+email varchar(20) unique,
+age int, check(age>=18),
+status boolean default 1);
+
+insert into student values(2,"abcd","abcd@gmail",18,10);
+
+insert into student values(3,"abcde","abcde@gmail",18,null);
+select * from student;
+
+create table student1(
+id int primary key,
+name varchar(10),
+city varchar(10));
+
+create table student2(
+id int primary key,
+name varchar(10),
+city varchar(10) references student1(city));
+
+
+create table student1(
+id int,
+name varchar(10),
+city varchar(10),
+primary key(id));
