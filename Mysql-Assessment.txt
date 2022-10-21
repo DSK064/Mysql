@@ -1,0 +1,211 @@
+create database LMS_DB;
+use LMS_DB;
+create table LMS_MEMBERS(
+memberId varchar(10) primary key,
+memberName varchar(30),
+city varchar(20),
+dateRegister date,
+dateExpire date,
+membershipStatus varchar(20));
+drop table LMS_fine_details;
+insert into LMS_MEMBERS values("lm001","amith","chennai",'2012-02-12','2013-02-11',"temporary"),
+("lm002","abdhul","delhi",'2012-04-10','2013-04-09',"temporary"),
+("lm003","gayan","chennai",'2012-05-13','2013-05-12',"permanant"),
+("lm004","radha","chennai",'2012-04-22','2013-04-21',"temporary"),
+("lm005","guru","bangalore",'2012-03-30','2013-05-16',"temporary"),
+("lm006","mohan","chennai",'2012-04-12','2013-05-16',"temporary");
+
+create table LMS_SUPPLIERS_DETAILS(
+supplierId varchar(5) primary key,
+supplierName varchar(30),
+address varchar(50),
+contact int,
+email varchar(20));
+
+insert into LMS_SUPPLIERS_DETAILS values("s01","singapoore shoppee","chennai",98941235,"sing@gmail.com"),
+("s02","jk stores","mumbai",99401234,"jks@yahoo.com"),
+("s03","rose book store","trivandrum",94444112,"rose@gmail.com"),
+("s04","kavari store","delhi",86300014,"kavi@redif.com"),
+("s05","einsten book us","chennai",95420000,"eingal@aol.com"),
+("s06","akbar store","mumbai",78556231,"akbakst@aol.com");
+
+create table LMS_FINE_DETAILS(
+fineRange varchar(5) primary key,
+fineAmount numeric(10,2));
+
+insert into LMS_FINE_DETAILS values("r0",0.00),("r1",20.00),("r2",50.00),("r3",75.00),("r4",100.00),("r5",150.00),("r6",200.00);
+
+create table LMS_BOOK_DETAILS(
+bookCode varchar(10) primary key,
+bookTitle varchar(50),
+category varchar(15),
+author varchar(30),
+pblication varchar(30),
+publishDate date,
+bookEdition int,
+price numeric(8,2),
+rackNum varchar(3),
+dateArrival date,
+supplierId varchar(3) references LMS_SUPPLIERS_DETAILS(supplierId));
+
+insert into LMS_BOOK_DETAILS values("bl000010","java forvDummies","java","paul j. Deitel","prentice hall",'1999-12-10',6,575.00,"A1",'2011-05-10',"s01"),
+("bl000002","java: The Complete R..","java","herbert schildt","tata mcgraw hill",'2011-10-10',5,750.00,"A1",'2011-05-10',"s03"),
+("bl000003","java How To Do Prog..","java","paul j. Deitel","prentice hall",'1999-05-10',6,600.00,"A1",'2012-05-10',"s01"),
+("bl000004","java: The Complete R..","java","herbert schildt","tata mcgraw hill",'2011-10-10',5,750.00,"A1",'2012-05-11',"s01"),
+("bl000005","java How To Do Prog..","java","paul j. Deitel","prentice hall",'1999-12-10',6,600.00,"A1",'2012-05-11',"s01"),
+("bl000006","java: The Complete R..","java","herbert schildt","tata mcgraw hill",'2011-10-10',5,750.00,"A1",'2012-05-12',"s03"),
+("bl000007","Let Us C","c","yashavant kanetkar","bpb publications",'2010-12-11',9,500.00,"A3",'2010-11-03',"s03"),
+("bl000008","Let Us C","c","yashavant kanetkar","bpb publications",'2010-05-12',9,500.00,"A3",'2011-08-09',"s04"),
+("bl000009","Let Us C#","c","yashavant kanetkar","bpb publications",'2010-05-12',9,500.00,"A3",'2011-08-09',"s04"),
+("bl000011","Let Us C++","c","yashavant kanetkar","bpb publications",'2010-05-12',9,650.00,"A3",'2011-08-09',"s04");
+
+select * from LMS_BOOK_DETAILS;
+
+create table LMS_BOOK_ISSUE(
+bookIssueNo int primary key,
+memberId varchar(10) references LMS_MEMBERS(memberId),
+bookCode varchar(10) references LMS_BOOKS_DETAILS(bookCode),
+dateIssue date,
+dateReturn date,
+dateReturned date,
+fineRange varchar(5) references LMS_FINE_DETAILS(fineRange));
+
+insert into LMS_BOOK_ISSUE values(1,"lm001","bl000010",'2012-05-01','2012-05-16','2012-05-16',"r0"),
+(2,"lm002","bl000002",'2012-05-01','2012-05-06','2012-05-16',"r2"),
+(3,"lm003","bl000007",'2012-04-01','2012-04-16','2012-04-20',"r1"),
+(4,"lm004","bl000005",'2012-04-01','2012-04-16','2012-04-20',"r1"),
+(5,"lm005","bl000008",'2012-03-30','2012-04-16','2012-04-20',"r1"),
+(6,"lm005","bl000008",'2012-04-20','2012-05-05','2012-05-05',"r0"),
+(7,"lm003","bl000007",'2012-04-22','2012-05-07','2012-05-25',"r4");
+
+
+use LMS_DB;
+
+#1
+desc LMS_BOOK_DETAILS;
+
+#2
+show columns from lms_fine_details;
+
+#3
+select memberName from lms_members where city="chennai";
+
+#4
+select memberId,memberName,city,membershipStatus from lms_members where membershipStatus="permanant";
+
+#5
+select lms_book_issue.memberId,lms_members_details.memberName from lms_members_details inner join lms_book_issue on bookCode="bl000002" and lms_members_details.memberId=lms_book_issue.memberId;
+
+#6
+select bookCode,bookTitle,author from lms_book_details where author like'p%';
+
+#7
+select count(category) as 'no_f_books' from lms_book_details where category="java";
+
+#8
+select category,count(*) as 'no_of_books' from lms_book_details group by category;
+
+#9
+select count(bookTitle) as 'no_of_books' from lms_book_details where pblication='Prentice Hall';
+
+#10
+select lms_book_issue.bookCode,lms_book_details.bookTitle from lms_book_issue inner join lms_book_details on lms_book_issue.dateIssue='2012-04-01' and lms_book_issue.bookCode=lms_book_details.bookCode;
+
+#11
+select memberId,memberName,dateRegister,dateExpire from lms_members where dateExpire<'2013-04-01';
+
+#12
+select memberId,memberName,dateRegister,membershipStatus from lms_members where dateRegister<'2012-03-01' and membershipStatus='temporary';
+
+#13
+select memberId,memberName,city from lms_members where city in ('chennai','delhi');
+
+#14
+select concat(bookTitle," is written by ",author) as 'book details' from lms_book_details;
+
+#15
+select avg(price) as 'averagePrice' from lms_book_details where category="java";
+
+#16
+select supplierId,supplierName,email from lms_suppliers_details where email is not null;
+
+#17
+select supplierId,supplierName,coalesce(contact,email,address) as 'contactDetails' from lms_suppliers_details;
+select * from lms_book_details;
+
+#18
+select m.memberId,m.memberName,d.bookCode,d.bookTitle from lms_book_details as d inner join lms_book_issue as i on i.bookCode=d.bookCode
+inner join lms_members as m where i.memberId=m.memberId;
+
+#19
+select m.memberId,m.memberName,f.fineRange,f.fineAmount from lms_members as m inner join lms_fine_details as f on f.fineAmount<100;
+
+#20
+select bookCode,bookTitle,rackNum from lms_book_details where rackNum="A1" order by bookTitle asc;
+
+#21
+select  m.memberId,m.memberName,m.dateRegister from lms_members as m where m.memberId<>all(select m.memberId from lms_book_issue as i inner join lms_members as m where m.memberId=i.memberId);
+
+#22
+select i.memberId,m.memberName from lms_members as m inner join lms_book_issue as i on m.memberId=i.memberId where i.dateReturned<=i.dateReturn and year(i.dateIssue)='2012';
+
+#23
+Delimiter $
+create procedure valueDisplay(in val int)
+begin
+select rackNum,count(bookCode) as 'No_of_books' from lms_book_details group by rackNum order by rackNum asc;
+end$
+Delimiter ;
+
+call valueDisplay(1);
+
+#24
+select i.bookIssueNo,m.memberName,m.dateRegister,m.dateExpire,d.bookTitle,d.category,d.author,d.price,i.dateIssue,i.dateReturn,i.dateReturned,m.membershipStatus from lms_members_details as m join lms_book_issue as i on i.memberId=m.memberId
+join lms_book_details as d on d.bookCode=i.bookCode;
+
+#25
+select m.memberId,m.memberName,3-count(i.memberId)as 'remaining books' from lms_members_details as m join lms_book_issue as i on m.memberId=i.memberId group by i.memberId;
+
+#26
+select * from lms_suppliers_details limit 3;
+
+#27
+select * from lms_suppliers_details where supplierId not in("s01","s02","s03");
+
+#28
+rename table lms_members to lms_members_details;
+
+#29
+truncate table lms_fine_details;
+select * from lms_fine_details;
+
+#30
+select distinct bookTitle as 'Books'  from lms_book_details;
+
+start transaction;
+Delimiter $
+create trigger updateValue
+after insert on temp for each row
+begin
+update lms_fine_details set fineAmount=1.00 where fineRange='r0';
+end$
+Delimiter ;
+
+insert into temp value(10);
+commit;
+
+select * from lms_fine_details;
+
+Delimiter $
+create function updateFineAmount(fineRange varchar(3))
+returns int
+deterministic
+begin
+update lms_fine_details set fineAmount= fineAmount + 500;
+return 1;
+end$
+Delimiter ;
+
+select updateFineAmount("r0");
+
+select *  from lms_fine_details;

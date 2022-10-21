@@ -1,0 +1,52 @@
+use trainingIvy;
+
+create table employeeChanges(
+empno int,
+beforeSal decimal(20,2),
+afterSal decimal(20,2));
+
+Delimiter $
+create trigger properSalary
+after update on employees for each row
+begin
+if old.salary<new.salary then insert into employeeChanges values(old.empno,old.salary,new.salary);
+end if;
+end$
+Delimiter ;
+
+update employees set salary=1005.00 where empno=8521;
+
+select * from employees;
+select * from employeeChanges;
+drop trigger properSalary;
+
+start transaction;
+insert into employeechanges values(123,144.00,177.60);
+commit;
+update employeechanges set afterSal=200.00;
+rollback;
+
+start transaction;
+insert into employeechanges values(1453,112.00,167.60);
+savepoint pointOne;
+update employeechanges set afterSal=300.00 where empno=1453;
+rollback to pointOne;
+delete from employeechanges where empno=123;
+commit;
+
+create table abcBank(
+cusId int,
+cusName varchar(10),
+amount int);
+
+insert into abcBank values(1,"A",1000),(2,"B",2000),(3,"C",3000),(4,"D",4000);
+
+select * from abcBank;
+
+start transaction;
+update abcBank set amount= amount-100 where cusId = 1;
+savepoint pointOne;
+update abcBank set amount= amount+200 where cusId=3;
+rollback to pointOne;
+insert into abcBank values(5,"E",500);
+commit;

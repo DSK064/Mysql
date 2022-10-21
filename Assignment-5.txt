@@ -1,0 +1,89 @@
+use trainingIvy;
+create table employees(
+empno int,
+ename varchar(20),
+job varchar(20),
+manager int,
+hiredate date,
+salary  decimal(20,2),
+commission decimal(20,2),
+deptno int);
+
+insert into  employees values(8369,"smith","clerk",8902,'1990-12-18',800.00,null,20),
+(8499,"anya","salesman",8698,'1991-02-20',1600.00,300.00,30),
+(8521,"seth","salesman",8698,'1991-02-22',1250.00,500.00,30),
+(8566,"mahadevan","manager",8839,'1991-04-02',2985.00,null,20),
+(8654,"momin","salesman",8698,'1991-09-28',1250.00,1400.00,30),
+(8698,"bina","manager",8839,'1991-05-01',2850.00,null,30),
+(8882,"shivansh","manager",8839,'1991-06-09',2450.00,null,10),
+(8888,"scott","analyst",8566,'992-12-09',3000.00,null,20),
+(8839,"amir","president",null,'1991-11-18',5000.00,null,10),
+(8844,"kuldeep","salesman",8698,'1991-09-08',1500.00,0.00,30),
+(8886,"anoop","clerk",8888,'1993-01-12',1100.00,null,20),
+(8100,"yash","analyst",null,'2003-05-03',60000.00,null,20),
+(8900,"jatin","clerk",8698,'1991-12-03',950.00,null,30),
+(8902,"fakir","analyst",8566,'1991-12-03',3500.00,null,20);
+
+
+Delimiter $
+create function displayEmployees()
+returns table(empno int,ename varchar(20))
+deterministic
+begin
+return query; select empno,ename fromemployees;
+end$
+Delimiter ;
+
+Delimiter $
+create function addNewRecordInEmployees(empno int, name varchar(20), job varchar(20), manager int, hiredate date, salary decimal(20,2), commission decimal(20,2), deptno int)
+returns int
+deterministic
+begin
+insert into employees values(empno,name,job,manager,hiredate,salary,commission,deptno);
+return 1;
+end$
+Delimiter ;
+
+
+select addNewRecordInEmployees(8008,'ramesh','clerk',8789,'2022-08-09',4500.00,10.00,10);
+
+Delimiter $
+create function noOfRecords()
+returns int
+deterministic
+begin
+declare total int;
+select count(*) from employees into total;
+return total;
+end$
+delimiter $
+
+select noOfRecords();
+
+Delimiter $
+create function updateSalary(salary decimal,empno int)
+returns decimal
+deterministic
+begin
+update employees set employees.salary=salary where employees.empno=empno;
+return salary;
+end$
+Delimiter $
+
+select updateSalary(500.00,8008) as 'updated Salary';
+
+
+select * from employees;
+
+Delimiter $
+create function removeRow(empno int)
+returns varchar(20)
+deterministic
+begin
+delete from employees where employees.empno=empno;
+return "deleted";
+end$
+Delimiter ;
+
+select removeRow(8902);
+select * from employees;

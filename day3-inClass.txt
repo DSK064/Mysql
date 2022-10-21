@@ -1,0 +1,88 @@
+use trainingIvy;
+
+Delimiter $
+create function helloworld()
+returns varchar(50)
+deterministic
+begin
+return " hello world from user defined function";
+end$
+Delimiter ;
+select helloworld() as 'string';
+select fullName('sai','kumar');
+
+Delimiter $
+create function fullName(firstName varchar(20),lastName varchar(20))
+returns varchar(40)
+deterministic
+begin
+Return concat(firstName,lastName);
+end$
+Delimiter ;
+
+Delimiter $
+create function multiplication(numberOne int,numberTwo int)
+returns int
+deterministic
+begin
+return (numberOne*numberTwo);
+end$
+delimiter ;
+select multiplication(2,3);
+
+Delimiter $
+create function calculateAge(dob date)
+returns int
+deterministic
+begin
+declare todayDate date;
+select current_date()  into todayDate;
+return year(todayDate)-year(dob);
+end $
+Delimiter ;
+
+select calculateAge('2000-08-30') as 'Age';
+
+
+
+Delimiter $
+create procedure getTeacherTable()
+begin
+select * from teachers;
+end$
+Delimiter ;
+
+call getTeacherTable();
+
+Delimiter $
+create procedure getTeacherName(in id int)
+begin
+select name from teachers where teachers.no=id;
+end$
+Delimiter ;
+
+call getTeacherName(1);
+
+Delimiter $
+create procedure getTeachersCount(out teachersCount int)
+begin
+select count(name) into teachersCount from teachers;
+end$
+Delimiter ;
+
+call getTeachersCount(@teachersCount);
+select @teachersCount as 'total no of teachers';
+
+Delimiter $
+create procedure getCountByDeptOfTeachers(in department varchar(10), out teacherCount int)
+begin
+select count(name) into teacherCount from teachers where teachers.department=department;
+end$
+Delimiter ;
+
+call getCountByDeptOfTeachers('history',@teacherCount);
+select @teacherCount;
+
+create view teachersView as select name,age from teachers;
+select * from teachersView;
+select * from teachersView where age in(35,26);
